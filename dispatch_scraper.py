@@ -70,22 +70,26 @@ print("Getting latest saved dispatch ...")
 # Get latest dispatch time 
 latest_dispatch = get_latest_dispatch(out_file_path)
 
-# Create or overwrite temp file 
-intialize_temp_file(temp_file_path, headers)
 
-# Get table rows 
-table_body = driver.find_element(By.CSS_SELECTOR,'tbody')
-rows = table_body.find_elements(By.CSS_SELECTOR,'tr')
+# If LRPD has loaded in a new report continue with script  
+if latest_dispatch:
 
-# Update status in terminal 
-print("Gathering latest dispatches ...")
+	# Create or overwrite temp file 
+	intialize_temp_file(temp_file_path, headers)
 
-gather_latest_dispatches(temp_file_path, rows, latest_dispatch)
+	# Get table rows 
+	table_body = driver.find_element(By.CSS_SELECTOR,'tbody')
+	rows = table_body.find_elements(By.CSS_SELECTOR,'tr')
 
-# Update status in terminal 
-print("Formating output files ...")
+	# Update status in terminal 
+	print("Gathering latest dispatches ...")
 
-format_out_files(latest_dispatch, temp_file_path, out_file_path)
+	gather_latest_dispatches(temp_file_path, rows, latest_dispatch)
 
-# Write final data to kaggle 
-write_to_kaggle(is_new_dataset, kaggle_path, output_path)
+	# Update status in terminal 
+	print("Formating output files ...")
+
+	format_out_files(latest_dispatch, temp_file_path, out_file_path)
+
+	# Write final data to kaggle 
+	write_to_kaggle(is_new_dataset, kaggle_path, output_path)
