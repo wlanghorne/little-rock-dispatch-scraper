@@ -47,6 +47,7 @@ def get_latest_dispatch(out_file_path):
 		try: 
 			second_row = next(reader)
 			latest_dispatch = second_row[2]
+			return latest_dispatch
 		except StopIteration as exception:
 			print(exception)
 			latest_dispatch = False
@@ -58,11 +59,16 @@ def intialize_temp_file (temp_file_path, headers):
 		f.close()
 
 def gather_latest_dispatches(temp_file_path, rows, latest_dispatch):
+	is_first_row = True
 	for row in rows: 
 		cells = row.find_elements(By.CSS_SELECTOR, 'td')
 		# Check if the latest data in the dispatch log matches the latest data in the sheet 
 		if cells[2].get_attribute('innerHTML') == latest_dispatch:
-			break
+			if is_first_row:
+				# if the lastest recorded dispatch is the latest one on the site, the record is up to date  
+				return False 
+			else:
+				return True 
 		# If there is new data, write to the temp_file
 		else:
 			cell_data = []
@@ -70,9 +76,11 @@ def gather_latest_dispatches(temp_file_path, rows, latest_dispatch):
 				cell_data.append(cell.get_attribute('innerHTML'))
 			# Write to file 
 			with open(temp_file_path, 'a') as f:
+				print("writing")
 				writer = csv.writer(f)
 				writer.writerow(cell_data)
 				f.close()
+		is_first_row = False 
 
 def format_out_files(latest_dispatch, temp_file_path, out_file_path):
 	# Write old dispatch calls beneath new calls in temp file 
