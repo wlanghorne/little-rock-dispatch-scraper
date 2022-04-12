@@ -81,6 +81,7 @@ def gather_latest_dispatches(temp_file_path, rows, latest_dispatch):
 				writer.writerow(cell_data)
 				f.close()
 		is_first_row = False 
+	return True 
 
 def format_out_files(latest_dispatch, temp_file_path, out_file_path):
 	# Write old dispatch calls beneath new calls in temp file 
