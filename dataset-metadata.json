@@ -1,7 +1,7 @@
 {
   "title": "Little Rock PD dispatch log ",
   "subtitle": "Complied by the Arkansas Democrat-Gazette",
-  "description": "Data is pulled every minute from https://clrweb.littlerock.state.ar.us/pub/public_menu.php.", 
+  "description": "Data is pulled every second from https://clrweb.littlerock.state.ar.us/pub/public_menu.php.", 
   "id": "adgnewsbot/", 
   "licenses": [{"name": "CC0-1.0"}],
   "resources": [

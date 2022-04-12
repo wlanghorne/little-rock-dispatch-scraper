@@ -76,7 +76,7 @@ def gather_latest_dispatches(temp_file_path, rows, latest_dispatch):
 				cell_data.append(cell.get_attribute('innerHTML'))
 			# Write to file 
 			with open(temp_file_path, 'a') as f:
-				print("writing")
+				print("Writing dispatch")
 				writer = csv.writer(f)
 				writer.writerow(cell_data)
 				f.close()
