@@ -1,0 +1,32 @@
+{
+  "title": "Little Rock PD dispatch log ",
+  "subtitle": "Complied by the Arkansas Democrat-Gazette",
+  "description": "Data is pulled every minute from https://clrweb.littlerock.state.ar.us/pub/public_menu.php.", 
+  "id": "adgnewsbot/", 
+  "licenses": [{"name": "CC0-1.0"}],
+  "resources": [
+    {
+      "path": "",
+      "description": "",
+      "schema": {
+        "fields": [
+          {
+            "name": "Call type",
+            "description": "Type of report",
+            "type": "string"
+          },
+          {
+            "name": ",Location",
+            "description": "Address of report",
+            "type": "string"
+          },
+          {
+            "name": "Dispatch time",
+            "description": "Time of dispatch report",
+            "type": "datetime"
+          }
+        ]
+      }
+    }
+  ]
+}
