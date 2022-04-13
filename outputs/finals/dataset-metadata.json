@@ -1,1 +1,15 @@
-{"title": "Little Rock PD dispatch archive", "subtitle": "Complied for the Arkansas Democrat-Gazette", "description": "This is an archive of all the dispatch calls recorded by the Little Rock Police Department dating to 04/13/22. The dataset updates every four hours with the latest reports. Every day the dataset updates with a new csv. Orginal dispatches for the last 8 hours can be found at: https://clrweb.littlerock.state.ar.us/pub/public_menu.php.", "id": "adgnewsbot/lr-pd-dispatch-archive", "licenses": [{"name": "CC0-1.0"}], "resources": [{"path": "2022-04-13.csv", "description": "Contains call types, addresses and report times for each Little Rock PD dispatch for the given day", "schema": {"fields": [{"name": "Call type", "description": "Type of report", "type": "string"}, {"name": ",Location", "description": "Address of report", "type": "string"}, {"name": "Dispatch time", "description": "Time of dispatch report", "type": "datetime"}]}}]}
+{
+    "title": "Little Rock PD dispatch archive",
+    "subtitle": "Complied for the Arkansas Democrat-Gazette",
+    "description": "This is an archive of all the dispatch calls recorded by the Little Rock Police Department dating to 04/13/22. The dataset updates every four hours with the latest reports. Every day the dataset updates with a new csv. Orginal dispatches for the last 8 hours can be found at: https://clrweb.littlerock.state.ar.us/pub/public_menu.php.",
+    "id": "adgnewsbot/lr-pd-dispatch-archive",
+    "licenses":
+    [
+        {
+            "name": "CC0-1.0"
+        }
+    ],
+    "resources":
+    [
+    ]
+}
