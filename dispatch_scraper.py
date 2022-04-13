@@ -5,7 +5,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
-from scraper_functions import format_out_files, gather_latest_dispatches, intialize_temp_file, get_latest_dispatch, create_dir, create_file, create_metadata_file, write_to_kaggle
+from scraper_functions import has_no_csv, format_out_files, gather_latest_dispatches, intialize_temp_file, get_latest_dispatch, create_dir, create_file, update_metadata_file, write_to_kaggle
 from time import sleep
 from datetime import date
 import csv
@@ -16,7 +16,33 @@ output_path = './outputs'
 driver_path = './chromedriver'
 url = 'https://clrweb.littlerock.state.ar.us/pub/public_menu.php'
 kaggle_path = './kaggle'
-orgin_metadata_path = './dataset-metadata.json'
+metadata_path = './outputs/finals/dataset-metadata.json'
+
+# Store basic metadata for new kaggle csv file
+new_metadata_dict = {"path": "",
+					 "description": "Contains call types, addresses and report times for each Little Rock PD dispatch for the given day",
+			         "schema":
+			         	{
+			                "fields":
+			                [
+			                    {
+			                        "name": "Call type",
+			                        "description": "Type of report",
+			                        "type": "string"
+			                    },
+			                    {
+			                        "name": ",Location",
+			                        "description": "Address of report",
+			                        "type": "string"
+			                    },
+			                    {
+			                        "name": "Dispatch time",
+			                        "description": "Time of dispatch report",
+			                        "type": "datetime"
+			                    }
+			                ]
+			            }
+			        }
 
 # CSV headers 
 headers = ['Call type', 'Location', 'Dispatch time']
@@ -24,25 +50,28 @@ headers = ['Call type', 'Location', 'Dispatch time']
 # Create output directory if it doesn't already exist 
 create_dir(output_path)
 
-# Create the output directory for the current day if it doesn't already exist
+# Create the final output and temporary output directorys
+finals_path = os.path.join(output_path, 'finals')
+temps_path = os.path.join(output_path, 'temps')
+create_dir(temps_path)
+
+# Create a new dataset if there are no csv files in final path 
+is_new_dataset = has_no_csv(finals_path)
+print(is_new_dataset)
+
+# CSV final output file and temp storage file containing reports for the current day
 today = str(date.today())
-output_path = os.path.join(output_path, today)
-create_dir(output_path)
-
-# Create the final output directory for the current day if it doesn't already exist
-output_path = os.path.join(output_path, 'final')
-create_dir(output_path)
-
-# CSV final output file and temp storage file containing reports for the current day 
-out_file = today + '.csv'
+final_file = today + '.csv'
 temp_file = today + '_temp.csv'
-out_file_path = os.path.join(output_path, out_file)
-temp_file_path = os.path.join(os.path.split(output_path)[0], temp_file)
+final_file_path = os.path.join(finals_path, final_file)
+temp_file_path = os.path.join(temps_path, temp_file)
 
-# If the csv file doesn't exist, create it w/ headers and generate meta data file for kaggle
-# Set boolean value for if new dataset depending on if new file was created 
-is_new_dataset = create_file(out_file_path, headers)
-create_metadata_file(kaggle_path, orgin_metadata_path, output_path, today)
+# If final_file is a new file, update the kaggle metadata
+if not os.path.exists(final_file_path):
+	update_metadata_file(kaggle_path, metadata_path, new_metadata_dict, final_file_path)
+
+# Create final final path if needed 
+create_file(final_file_path, headers)
 
 # Initiate driver
 chrome_options = Options()
@@ -68,7 +97,7 @@ WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.CSS_SELECTOR,
 print("Getting latest saved dispatch ...")
 
 # Get latest dispatch time 
-latest_dispatch = get_latest_dispatch(out_file_path)
+latest_dispatch = get_latest_dispatch(final_file_path)
 
 # Get table rows 
 table_body = driver.find_element(By.CSS_SELECTOR,'tbody')
@@ -81,13 +110,12 @@ print("Gathering latest dispatches ...")
 intialize_temp_file(temp_file_path, headers)
 
 # If there are new dispatches, update kaggle
-
-if gather_latest_dispatches(temp_file_path, rows, latest_dispatch):
+if gather_latest_dispatches(temp_file_path, rows, latest_dispatch, today):
 
 	# Update status in terminal 
 	print("Formating output files ...")
 
-	format_out_files(latest_dispatch, temp_file_path, out_file_path)
+	format_out_files(latest_dispatch, temp_file_path, final_file_path)
 
 	# Write final data to kaggle 
-	write_to_kaggle(is_new_dataset, kaggle_path, output_path)
+	write_to_kaggle(is_new_dataset, kaggle_path, finals_path)

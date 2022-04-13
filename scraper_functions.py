@@ -38,6 +38,13 @@ def create_file(path, headers):
 				f.close()
 		return False
 
+def has_no_csv(path):
+  file_names = os.listdir(path)
+  for file_name in file_names:
+  	if file_name.endswith('.csv'):
+  		return False
+  return True
+
 def get_latest_dispatch(out_file_path):
 	with open(out_file_path, 'r') as f:
 		reader = csv.reader(f)
@@ -58,12 +65,13 @@ def intialize_temp_file (temp_file_path, headers):
 		writer.writerow(headers)
 		f.close()
 
-def gather_latest_dispatches(temp_file_path, rows, latest_dispatch):
+def gather_latest_dispatches(temp_file_path, rows, latest_dispatch, today):
 	is_first_row = True
 	for row in rows: 
 		cells = row.find_elements(By.CSS_SELECTOR, 'td')
-		# Check if the latest data in the dispatch log matches the latest data in the sheet 
-		if cells[2].get_attribute('innerHTML') == latest_dispatch:
+		# Check if the latest data in the dispatch log matches the latest data in the sheet and ensure that only dispatches for the given day are included 
+		dispatch_time = cells[2].get_attribute('innerHTML')   
+		if dispatch_time == latest_dispatch or today not in dispatch_time:
 			if is_first_row:
 				# if the lastest recorded dispatch is the latest one on the site, the record is up to date  
 				return False 
@@ -83,12 +91,12 @@ def gather_latest_dispatches(temp_file_path, rows, latest_dispatch):
 		is_first_row = False 
 	return True 
 
-def format_out_files(latest_dispatch, temp_file_path, out_file_path):
+def format_out_files(latest_dispatch, temp_file_path, final_file_path):
 	# Write old dispatch calls beneath new calls in temp file 
 	if latest_dispatch: 
 	    with open(temp_file_path, 'a') as temp_f:
 	        writer = csv.writer(temp_f)
-	        with open(out_file_path, 'r') as f:
+	        with open(final_file_path, 'r') as f:
 	            reader = csv.reader(f)
 	            next(reader)
 	            for row in reader:
@@ -96,7 +104,7 @@ def format_out_files(latest_dispatch, temp_file_path, out_file_path):
 	            f.close()
 	        temp_f.close()
 	# Write temp file into file  
-	with open(out_file_path, 'w') as f:
+	with open(final_file_path, 'w') as f:
 	    writer = csv.writer(f)
 	    with open(temp_file_path, 'r') as temp_f:
 	        reader = csv.reader(temp_f)
@@ -105,27 +113,22 @@ def format_out_files(latest_dispatch, temp_file_path, out_file_path):
 	        temp_f.close()
 	    f.close()
 
-def create_metadata_file(kaggle_path, orgin_path, new_path, str_date):
-	meta_file_path = os.path.join(new_path, 'dataset-metadata.json')
-	if not os.path.exists(meta_file_path):
-		create_metadata_cmd = kaggle_path + ' datasets init -p ' + new_path
-		print(create_metadata_cmd)
-		os.system(create_metadata_cmd)
+def update_metadata_file(kaggle_path, metadata_path, new_metadata_dict, final_file_path):
+	# read existing metadata for dataset into dict 
+	meta_dict = {}
+	with open(metadata_path) as json_file:
+		meta_dict = json.load(json_file)
+		json_file.close()
 
-		# read meta data file into dict 
-		meta_dict = {}
-		with open(orgin_path) as json_file:
-			meta_dict = json.load(json_file)
-			json_file.close()
+	new_metadata_dict['path'] = str(os.path.split(final_file_path)[1])
 
-		# change meta data using dates 
-		meta_dict['title'] = meta_dict['title'] + str_date
-		meta_dict['id'] = meta_dict['id'] + str_date
-		meta_dict['resources'][0]['path'] = str_date + '.csv'
+	# get the number of csv files already included in the dataset  
+	path_num = len(meta_dict['resources'])
+	meta_dict['resources'].append(new_metadata_dict)
 
-		# write new meta data back into json file 
-		with open(meta_file_path, 'w') as json_file:
-			json.dump(meta_dict, json_file)
+	# write new meta data back into json file 
+	with open(metadata_path, 'w') as json_file:
+		json.dump(meta_dict, json_file)
 
 
 def write_to_kaggle(is_new_dataset, kaggle_path, dataset_path):
