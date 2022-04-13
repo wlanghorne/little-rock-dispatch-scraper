@@ -12,11 +12,11 @@ import csv
 import os 
 
 # Paths to csv file that will store data 
-output_path = './outputs'
-driver_path = './chromedriver'
+output_path = '/Users/reporter/Desktop/launchd-scripts/little-rock-dispatch-scraper/outputs'
+driver_path = '/Users/reporter/Desktop/launchd-scripts/little-rock-dispatch-scraper/chromedriver'
 url = 'https://clrweb.littlerock.state.ar.us/pub/public_menu.php'
-kaggle_path = './kaggle'
-metadata_path = './outputs/finals/dataset-metadata.json'
+kaggle_path = '/Users/reporter/Desktop/launchd-scripts/little-rock-dispatch-scraper/kaggle'
+metadata_path = '/Users/reporter/Desktop/launchd-scripts/little-rock-dispatch-scraper/outputs/finals/dataset-metadata.json'
 
 # Store basic metadata for new kaggle csv file
 new_metadata_dict = {"path": "",
@@ -57,7 +57,6 @@ create_dir(temps_path)
 
 # Create a new dataset if there are no csv files in final path 
 is_new_dataset = has_no_csv(finals_path)
-print(is_new_dataset)
 
 # CSV final output file and temp storage file containing reports for the current day
 today = str(date.today())
