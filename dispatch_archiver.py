@@ -13,6 +13,8 @@ import os
 
 # Paths to csv file that will store data 
 output_path = './outputs'
+finals_path = os.path.join(output_path, 'finals')
+temps_path = os.path.join(output_path, 'temps')
 driver_path = './chromedriver'
 url = 'https://clrweb.littlerock.state.ar.us/pub/public_menu.php'
 kaggle_path = './kaggle'
@@ -51,8 +53,6 @@ headers = ['Call type', 'Location', 'Dispatch time']
 create_dir(output_path)
 
 # Create the final output and temporary output directorys
-finals_path = os.path.join(output_path, 'finals')
-temps_path = os.path.join(output_path, 'temps')
 create_dir(temps_path)
 
 # Create a new dataset if there are no csv files in final path 
