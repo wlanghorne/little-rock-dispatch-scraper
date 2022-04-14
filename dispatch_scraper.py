@@ -67,7 +67,7 @@ temp_file_path = os.path.join(temps_path, temp_file)
 
 # If final_file is a new file, update the kaggle metadata
 if not os.path.exists(final_file_path):
-	update_metadata_file(kaggle_path, metadata_path, new_metadata_dict, final_file_path)
+	update_metadata_file(metadata_path, new_metadata_dict, final_file_path)
 
 # Create final final path if needed 
 create_file(final_file_path, headers)

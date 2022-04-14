@@ -112,7 +112,7 @@ def format_out_files(latest_dispatch, temp_file_path, final_file_path):
 	        temp_f.close()
 	    f.close()
 
-def update_metadata_file(kaggle_path, metadata_path, new_metadata_dict, final_file_path):
+def update_metadata_file(metadata_path, new_metadata_dict, final_file_path):
 	# read existing metadata for dataset into dict 
 	meta_dict = {}
 	with open(metadata_path) as json_file:
@@ -123,12 +123,11 @@ def update_metadata_file(kaggle_path, metadata_path, new_metadata_dict, final_fi
 
 	# get the number of csv files already included in the dataset  
 	path_num = len(meta_dict['resources'])
-	meta_dict['resources'].append(new_metadata_dict)
+	meta_dict['resources'].insert(0, new_metadata_dict)
 
 	# write new meta data back into json file 
 	with open(metadata_path, 'w') as json_file:
 		json.dump(meta_dict, json_file)
-
 
 def write_to_kaggle(is_new_dataset, kaggle_path, dataset_path):
 	# if the dataset is new, create a new dataset using cmd line 
