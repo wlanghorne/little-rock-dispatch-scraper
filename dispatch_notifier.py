@@ -60,6 +60,7 @@ rows = table_body.find_elements(By.CSS_SELECTOR,'tr')
 # Check if new reports require notification
 dispatches_to_notify = get_dispatches_to_notify(latest_dispatch, rows, latest_dispatch_path, CALLS_TO_NOTIFY_ON, HEADERS)
 
+
 # Check if there any dispatches worth trigging notifications
 if not dispatches_to_notify: 
 	print('No calls requiring notification')

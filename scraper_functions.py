@@ -142,8 +142,8 @@ def get_dispatches_to_notify(latest_dispatch, rows, latest_dispatch_path, calls_
 					writer.writerow(cell_data)
 					f.close()
 				is_first_row = False
-			if cell_data[0] in calls_to_notify_on:
-				calls_to_notify.append(cell_data)
+				if cell_data[0] in calls_to_notify_on:
+					calls_to_notify.append(cell_data)
 	return calls_to_notify
 
 def format_out_files(latest_dispatch, temp_file_path, final_file_path):
