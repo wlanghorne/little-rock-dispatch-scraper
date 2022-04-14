@@ -5,7 +5,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
-from scraper_functions import has_no_csv, format_out_files, gather_latest_dispatches, intialize_temp_file, get_latest_dispatch, create_dir, create_file, update_metadata_file, write_to_kaggle
+from scraper_functions import has_no_csv, format_out_files, gather_latest_dispatches, intialize_temp_file, get_latest_dispatch, create_dir, create_file, update_metadata_file, write_to_kaggle, open_dispatch_log
 from time import sleep
 from datetime import date
 import csv
@@ -46,8 +46,8 @@ new_metadata_dict = {"path": "",
 			            }
 			        }
 
-# CSV headers 
-headers = ['Call type', 'Location', 'Dispatch time']
+# CSV HEADERS 
+HEADERS = ['Call type', 'Location', 'Dispatch time']
 
 # Create output directory if it doesn't already exist 
 create_dir(output_path)
@@ -70,7 +70,7 @@ if not os.path.exists(final_file_path):
 	update_metadata_file(metadata_path, new_metadata_dict, final_file_path)
 
 # Create final final path if needed 
-create_file(final_file_path, headers)
+create_file(final_file_path, HEADERS)
 
 # Initiate driver
 chrome_options = Options()
@@ -79,21 +79,8 @@ s = Service(driver_path)
 driver = webdriver.Chrome(service=s, options=chrome_options)
 driver.get(url)
 
-# Update status in terminal
-print("Opening url ...")
-
-# Delay to allow data to load 
-WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.CSS_SELECTOR, "a[class='paginate_button current']")))
-
-# Select all dispatches
-select_entries = Select(driver.find_element(By.NAME,'cadEventTable_length'))
-select_entries.select_by_value('-1')
-
-# Delay to allow data to load 
-WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.CSS_SELECTOR, "a[class='paginate_button previous disabled']")))
-
-# Update status in terminal 
-print("Getting latest saved dispatch ...")
+# Open dispatch log site
+open_dispatch_log(driver)
 
 # Get latest dispatch time 
 latest_dispatch = get_latest_dispatch(final_file_path)
@@ -106,7 +93,7 @@ rows = table_body.find_elements(By.CSS_SELECTOR,'tr')
 print("Gathering latest dispatches ...")
 
 # Create or overwrite temp file 
-intialize_temp_file(temp_file_path, headers)
+intialize_temp_file(temp_file_path, HEADERS)
 
 # If there are new dispatches, update kaggle
 if gather_latest_dispatches(temp_file_path, rows, latest_dispatch, today):
