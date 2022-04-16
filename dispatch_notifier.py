@@ -23,7 +23,7 @@ HEADERS = ['Call type', 'Location', 'Dispatch time']
 
 # Calls that will trigger notifications 
 # TODO: Currently contains test call types, update with correct call types
-CALLS_TO_NOTIFY_ON = {'DISTURBANCE IN PROGRESS'}
+CALLS_TO_NOTIFY_ON = ['SHOOT', 'SHOT', 'BATTERY', 'DEATH', 'DEAD', 'DISTURBANCE']
 
 # Process args 
 argv = sys.argv

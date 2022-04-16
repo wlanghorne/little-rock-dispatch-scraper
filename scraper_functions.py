@@ -122,28 +122,33 @@ def get_dispatches_to_notify(latest_dispatch, rows, latest_dispatch_path, calls_
 	calls_to_notify = []
 	for row in rows: 
 		cells = row.find_elements(By.CSS_SELECTOR, 'td')
-		# Check if the latest data in the dispatch log matches the latest data in the sheet and ensure that only dispatches for the given day are included 
-		dispatch_time = cells[2].get_attribute('innerHTML') 
+		# Check if the latest data in the dispatch log matches the latest data in the sheet and ensure that only dispatches for the given day are included
+		cell_data = []
+		for cell in cells:
+			cell_data.append(cell.get_attribute('innerHTML'))
+			# Update the latest dispatch file with the first dispatch listed on the log site  
+		dispatch_time = cell_data[2]
+		# update latest dispatch file with the latest dispatch from the website 
+		if is_first_row:
+			with open(latest_dispatch_path, 'w') as f:
+				writer = csv.writer(f)
+				writer.writerow(headers)
+				writer.writerow(cell_data)
+				f.close()
 		if dispatch_time == latest_dispatch:
-			if is_first_row: 
-				# if the lastest recorded dispatch is the latest one on the site, the notifier is up to date  
-				return False  
+			# if the lastest recorded dispatch is the latest one on the site, the notifier is up to date 
+			if is_first_row:  
+				return False
+			# if the latest recorded dispatch is not the first one on the site, the notifier is not up to date  
 			else: 
 				return calls_to_notify
 		else: 
-			cell_data = []
-			for cell in cells:
-				cell_data.append(cell.get_attribute('innerHTML'))
-				# Update the latest dispatch file with the first dispatch listed on the log site 
-			if is_first_row:
-				with open(latest_dispatch_path, 'w') as f:
-					writer = csv.writer(f)
-					writer.writerow(headers)
-					writer.writerow(cell_data)
-					f.close()
-				is_first_row = False
-				if cell_data[0] in calls_to_notify_on:
+			for call in calls_to_notify_on: 
+				if call in cell_data[0]:
 					calls_to_notify.append(cell_data)
+			if is_first_row:
+				is_first_row = False
+	# return in calls in case there is no latest dispatch (i.e. program never runs)
 	return calls_to_notify
 
 def format_out_files(latest_dispatch, temp_file_path, final_file_path):
