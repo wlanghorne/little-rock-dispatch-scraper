@@ -23,7 +23,7 @@ HEADERS = ['Call type', 'Location', 'Dispatch time']
 
 # Calls that will trigger notifications 
 # TODO: Currently contains test call types, update with correct call types
-CALLS_TO_NOTIFY_ON = ['SHOOT', 'SHOT', 'BATTERY', 'DEATH', 'DEAD', 'DISTURBANCE']
+CALLS_TO_NOTIFY_ON = ['SHOOT', 'SHOT', 'BATTERY', 'DEATH', 'DEAD']
 
 # Process args 
 argv = sys.argv
@@ -67,11 +67,20 @@ if not dispatches_to_notify:
 else:
 	print(dispatches_to_notify)
 	# Comp 
-	subject = 'LRPD responding to: ' 
+	subject = 'LRPD: ' 
 	body = ''
-	for notif in dispatches_to_notify:
-		subject = subject + notif[0] + ', '
-		body = body + notif[0] + ', ' + notif[1] + ', ' + notif[2] + ', ' + '\n'
+	num_dispatches = len(dispatches_to_notify)
+	if num_dispatches > 1:
+		for i in range(num_dispatches):
+			if i == 0:
+				subject = subject + dispatches_to_notify[i][0] 
+			else:
+				subject = subject + ', ' + dispatches_to_notify[i][0]
+
+			body = body + dispatches_to_notify[i][0] + ', ' + dispatches_to_notify[i][1] + ', ' + dispatches_to_notify[i][2] + '\n' + '\n'
+	else: 
+		subject = subject + dispatches_to_notify[0][0]
+		body = dispatches_to_notify[0][0] + ', ' + dispatches_to_notify[0][1] + ', ' + dispatches_to_notify[0][2] + '\n'
 
 	for recip in RECIP_ADDRESSES:
 		message = create_message(SENDER_ADDRESS, recip, subject, body)

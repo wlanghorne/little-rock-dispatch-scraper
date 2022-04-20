@@ -1,4 +1,4 @@
-#!/Library/Frameworks/Python.framework/Versions/3.10/bin/python3
+#!/Library/Frameworks/Python.framework/Versions/3.10/bin/python3.10
 # EASY-INSTALL-ENTRY-SCRIPT: 'kaggle==1.5.12','console_scripts','kaggle'
 import re
 import sys
