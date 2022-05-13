@@ -1,7 +1,7 @@
 {
     "title": "Little Rock PD dispatch archive",
-    "subtitle": "Archived dispatch reports from Little Rock Police Department",
-    "description": "This is an archive of all the dispatch calls recorded by the Little Rock Police Department dating to 04/13/22. The dataset updates every hour with the latest reports. Every day the dataset updates with a new csv. Orginal dispatches for the last 8 hours can be found at: https://clrweb.littlerock.state.ar.us/pub/public_menu.php.",
+    "subtitle": "Archived dispatch reports from the Little Rock Police Department",
+    "description": "This is an archive of dispatch calls recorded by the Little Rock Police Department. The archive has complete reports dating to 05/13/22. Previous versions of the dataset include incomplete reports dating to 04/13/22. The dataset updates every hour with the latest reports. Every day the dataset updates with a new csv. Original dispatches for the last 8 hours can be found at: https://clrweb.littlerock.state.ar.us/pub/public_menu.php.",
     "id": "willlanghorne/lr-pd-dispatch-archive",
     "licenses":
     [
@@ -12,7 +12,7 @@
     "resources":
     [
         {
-            "path": "2022-04-20.csv",
+            "path": "2022-05-13.csv",
             "description": "Contains call types, addresses and report times for each Little Rock PD dispatch for the given day",
             "schema":
             {
@@ -25,181 +25,6 @@
                     },
                     {
                         "name": ",Location",
-                        "description": "Address of report",
-                        "type": "string"
-                    },
-                    {
-                        "name": "Dispatch time",
-                        "description": "Time of dispatch report",
-                        "type": "datetime"
-                    }
-                ]
-            }
-        },
-        {
-            "path": "2022-04-19.csv",
-            "description": "Contains call types, addresses and report times for each Little Rock PD dispatch for the given day",
-            "schema":
-            {
-                "fields":
-                [
-                    {
-                        "name": "Call type",
-                        "description": "Type of report",
-                        "type": "string"
-                    },
-                    {
-                        "name": ",Location",
-                        "description": "Address of report",
-                        "type": "string"
-                    },
-                    {
-                        "name": "Dispatch time",
-                        "description": "Time of dispatch report",
-                        "type": "datetime"
-                    }
-                ]
-            }
-        },
-        {
-            "path": "2022-04-18.csv",
-            "description": "Contains call types, addresses and report times for each Little Rock PD dispatch for the given day",
-            "schema":
-            {
-                "fields":
-                [
-                    {
-                        "name": "Call type",
-                        "description": "Type of report",
-                        "type": "string"
-                    },
-                    {
-                        "name": ",Location",
-                        "description": "Address of report",
-                        "type": "string"
-                    },
-                    {
-                        "name": "Dispatch time",
-                        "description": "Time of dispatch report",
-                        "type": "datetime"
-                    }
-                ]
-            }
-        },
-        {
-            "path": "2022-04-17.csv",
-            "description": "Contains call types, addresses and report times for each Little Rock PD dispatch for the given day",
-            "schema":
-            {
-                "fields":
-                [
-                    {
-                        "name": "Call type",
-                        "description": "Type of report",
-                        "type": "string"
-                    },
-                    {
-                        "name": ",Location",
-                        "description": "Address of report",
-                        "type": "string"
-                    },
-                    {
-                        "name": "Dispatch time",
-                        "description": "Time of dispatch report",
-                        "type": "datetime"
-                    }
-                ]
-            }
-        },
-        {
-            "path": "2022-04-16.csv",
-            "description": "Contains call types, addresses and report times for each Little Rock PD dispatch for the given day",
-            "schema":
-            {
-                "fields":
-                [
-                    {
-                        "name": "Call type",
-                        "description": "Type of report",
-                        "type": "string"
-                    },
-                    {
-                        "name": ",Location",
-                        "description": "Address of report",
-                        "type": "string"
-                    },
-                    {
-                        "name": "Dispatch time",
-                        "description": "Time of dispatch report",
-                        "type": "datetime"
-                    }
-                ]
-            }
-        },
-        {
-            "path": "2022-04-15.csv",
-            "description": "Contains call types, addresses and report times for each Little Rock PD dispatch for the given day",
-            "schema":
-            {
-                "fields":
-                [
-                    {
-                        "name": "Call type",
-                        "description": "Type of report",
-                        "type": "string"
-                    },
-                    {
-                        "name": ",Location",
-                        "description": "Address of report",
-                        "type": "string"
-                    },
-                    {
-                        "name": "Dispatch time",
-                        "description": "Time of dispatch report",
-                        "type": "datetime"
-                    }
-                ]
-            }
-        },
-        {
-            "path": "2022-04-14.csv",
-            "description": "Contains call types, addresses and report times for each Little Rock PD dispatch for the given day",
-            "schema":
-            {
-                "fields":
-                [
-                    {
-                        "name": "Call type",
-                        "description": "Type of report",
-                        "type": "string"
-                    },
-                    {
-                        "name": "Location",
-                        "description": "Address of report",
-                        "type": "string"
-                    },
-                    {
-                        "name": "Dispatch time",
-                        "description": "Time of dispatch report",
-                        "type": "datetime"
-                    }
-                ]
-            }
-        },
-        {
-            "path": "2022-04-13.csv",
-            "description": "Contains call types, addresses and report times for each Little Rock PD dispatch for the given day",
-            "schema":
-            {
-                "fields":
-                [
-                    {
-                        "name": "Call type",
-                        "description": "Type of report",
-                        "type": "string"
-                    },
-                    {
-                        "name": "Location",
                         "description": "Address of report",
                         "type": "string"
                     },

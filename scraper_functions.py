@@ -21,12 +21,12 @@ def create_dir(path):
 
 def create_file(path, headers):
 	if not os.path.exists(path):
-	    with open(path, 'w') as f:
-	        writer = csv.writer(f)
-	        writer.writerow(headers)
-	        f.close()
-	        # indicate that new file was created 
-	        return True 
+			with open(path, 'w') as f:
+					writer = csv.writer(f)
+					writer.writerow(headers)
+					f.close()
+					# indicate that new file was created 
+					return True 
 	# ensure headers are in file if file exists
 	else: 
 		try:
@@ -49,11 +49,11 @@ def create_file(path, headers):
 		return False
 
 def has_no_csv(path):
-  file_names = os.listdir(path)
-  for file_name in file_names:
-  	if file_name.endswith('.csv'):
-  		return False
-  return True
+	file_names = os.listdir(path)
+	for file_name in file_names:
+		if file_name.endswith('.csv'):
+			return False
+	return True
 
 def get_latest_dispatch(out_file_path):
 	with open(out_file_path, 'r') as f:
@@ -89,10 +89,7 @@ def open_dispatch_log(driver):
 	# Delay to allow data to load 
 	WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.CSS_SELECTOR, "a[class='paginate_button previous disabled']")))
 
-	# Update status in terminal 
-	print("Getting latest saved dispatch ...")
-
-def gather_latest_dispatches(temp_file_path, rows, latest_dispatch, today):
+def gather_latest_dispatches_today(temp_file_path, rows, latest_dispatch, today):
 	is_first_row = True
 	for row in rows: 
 		cells = row.find_elements(By.CSS_SELECTOR, 'td')
@@ -103,7 +100,7 @@ def gather_latest_dispatches(temp_file_path, rows, latest_dispatch, today):
 				# if the lastest recorded dispatch is the latest one on the site, the record is up to date  
 				return False 
 			else:
-				return True 
+				return True
 		# If there is new data, write to the temp_file
 		else:
 			cell_data = []
@@ -116,6 +113,38 @@ def gather_latest_dispatches(temp_file_path, rows, latest_dispatch, today):
 				f.close()
 		is_first_row = False 
 	return True 
+
+def gather_latest_dispatches_yesterday(temp_file_path, rows, latest_dispatch, yesterday):
+	is_first_row = True
+	contains_yesterday_data = False
+	for row in rows: 
+		cells = row.find_elements(By.CSS_SELECTOR, 'td')
+		# Check if the latest data in the dispatch log matches the latest data in the sheet and ensure that only dispatches for the given day are included 
+		dispatch_time = cells[2].get_attribute('innerHTML') 
+		if yesterday in dispatch_time:
+			contains_yesterday_data = True  
+			if dispatch_time == latest_dispatch:
+				if is_first_row:
+					# if the lastest recorded dispatch is the latest one on the site, the record is up to date 
+					print("Yesterday's dispatches are up to date") 
+					return False 
+				else:
+					return True
+			# If there is new data, write to the temp_file
+			else:
+				is_new_data = True
+				cell_data = []
+				for cell in cells:
+					cell_data.append(cell.get_attribute('innerHTML'))
+					print("Adding yesterday dispatch to call")
+					print(cell.get_attribute('innerHTML'))
+				# Write to file 
+				with open(temp_file_path, 'a') as f:
+					writer = csv.writer(f)
+					writer.writerow(cell_data)
+					f.close()
+			is_first_row = False 
+	return contains_yesterday_data 
 
 def get_dispatches_to_notify(latest_dispatch, rows, latest_dispatch_path, calls_to_notify_on, headers):
 	is_first_row = True
@@ -154,24 +183,24 @@ def get_dispatches_to_notify(latest_dispatch, rows, latest_dispatch_path, calls_
 def format_out_files(latest_dispatch, temp_file_path, final_file_path):
 	# Write old dispatch calls beneath new calls in temp file 
 	if latest_dispatch: 
-	    with open(temp_file_path, 'a') as temp_f:
-	        writer = csv.writer(temp_f)
-	        with open(final_file_path, 'r') as f:
-	            reader = csv.reader(f)
-	            next(reader)
-	            for row in reader:
-	                writer.writerow(row)
-	            f.close()
-	        temp_f.close()
+			with open(temp_file_path, 'a') as temp_f:
+					writer = csv.writer(temp_f)
+					with open(final_file_path, 'r') as f:
+							reader = csv.reader(f)
+							next(reader)
+							for row in reader:
+									writer.writerow(row)
+							f.close()
+					temp_f.close()
 	# Write temp file into file  
 	with open(final_file_path, 'w') as f:
-	    writer = csv.writer(f)
-	    with open(temp_file_path, 'r') as temp_f:
-	        reader = csv.reader(temp_f)
-	        for row in reader:
-	            writer.writerow(row)
-	        temp_f.close()
-	    f.close()
+			writer = csv.writer(f)
+			with open(temp_file_path, 'r') as temp_f:
+					reader = csv.reader(temp_f)
+					for row in reader:
+							writer.writerow(row)
+					temp_f.close()
+			f.close()
 
 def update_metadata_file(metadata_path, new_metadata_dict, final_file_path):
 	# read existing metadata for dataset into dict 
@@ -218,7 +247,7 @@ def create_message(sender, to, subject, message_text):
 def send_message(service, user_id, message):
 	try:
 		message = (service.users().messages().send(userId=user_id, body=message)
-	               .execute())
+								 .execute())
 		print('Message Id: %s' % message['id'])
 		return message
 	except HttpError as error:
@@ -240,7 +269,7 @@ def create_api_service_object (path_to_api_files):
 			creds.refresh(Request())
 		else:
 			flow = InstalledAppFlow.from_client_secrets_file(
-                path_to_creds, scopes)
+								path_to_creds, scopes)
 			creds = flow.run_local_server(port=0)
 		# Save the credentials for the next run
 		with open(path_to_token, 'w') as token:
