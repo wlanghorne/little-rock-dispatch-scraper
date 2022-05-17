@@ -60,17 +60,19 @@ is_new_dataset = has_no_csv(finals_path)
 
 # CSV final output file and temp storage file containing reports for the current day
 today = str(date.today())
-yesterday = str(date.today() - timedelta(days = 1))
-yesterday_file = yesterday + '.csv'
 today_file = today + '.csv'
 temp_file = today + '_temp.csv'
+yesterday = str(date.today() - timedelta(days = 1))
+yesterday_file = yesterday + '.csv'
+yesterday_temp_file = yesterday + '_temp.csv'
 today_file_path = os.path.join(finals_path, today_file)
 yesterday_file_path = os.path.join(finals_path, yesterday_file)
 temp_file_path = os.path.join(temps_path, temp_file)
+yesterday_temp_file_path = os.path.join(temps_path, yesterday_temp_file)
 
 # If today_file is a new file, update the kaggle metadata
 if not os.path.exists(today_file_path):
-	update_metadata_file(metadata_path, new_metadata_dict, final_file_path)
+	update_metadata_file(metadata_path, new_metadata_dict, today_file_path)
 
 # Create today file path if needed 
 create_file(today_file_path, HEADERS)
@@ -108,7 +110,7 @@ if os.path.exists(yesterday_file_path) and gather_latest_dispatches_yesterday(te
 	# Update status in terminal 
 	print("Formating output files for yesterday ...")
 
-	format_out_files(latest_dispatch, temp_file_path, yesterday_file_path)
+	format_out_files(latest_dispatch, yesterday_temp_file_path, yesterday_file_path)
 
 	# Write final data to kaggle 
 	write_to_kaggle(is_new_dataset, kaggle_path, finals_path)
