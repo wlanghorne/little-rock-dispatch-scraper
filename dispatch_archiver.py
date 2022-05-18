@@ -104,9 +104,10 @@ print("Gathering latest dispatches ...")
 
 # Create or overwrite temp file 
 intialize_temp_file(temp_file_path, HEADERS)
+intialize_temp_file(yesterday_temp_file_path, HEADERS)
 
 # If there are new dispatches for yesterday, update kaggle file for previous day
-if os.path.exists(yesterday_file_path) and gather_latest_dispatches_yesterday(temp_file_path, rows, yesterday_latest_dispatch, yesterday):
+if os.path.exists(yesterday_file_path) and gather_latest_dispatches_yesterday(yesterday_temp_file_path, rows, yesterday_latest_dispatch, yesterday):
 	# Update status in terminal 
 	print("Formating output files for yesterday ...")
 
