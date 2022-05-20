@@ -92,8 +92,7 @@ print("Getting latest saved dispatch ...")
 
 # Get latest dispatch times 
 latest_dispatch = get_latest_dispatch(today_file_path)
-if os.path.exists(yesterday_file_path):
-	yesterday_latest_dispatch = get_latest_dispatch(yesterday_file_path)
+	
 
 # Get table rows 
 table_body = driver.find_element(By.CSS_SELECTOR,'tbody')
@@ -107,11 +106,14 @@ intialize_temp_file(temp_file_path, HEADERS)
 intialize_temp_file(yesterday_temp_file_path, HEADERS)
 
 # If there are new dispatches for yesterday, update kaggle file for previous day
-if os.path.exists(yesterday_file_path) and gather_latest_dispatches_yesterday(yesterday_temp_file_path, rows, yesterday_latest_dispatch, yesterday):
-	# Update status in terminal 
-	print("Formating output files for yesterday ...")
+if os.path.exists(yesterday_file_path):
+	yesterday_latest_dispatch = get_latest_dispatch(yesterday_file_path)
 
-	format_out_files(latest_dispatch, yesterday_temp_file_path, yesterday_file_path)
+	if gather_latest_dispatches_yesterday(yesterday_temp_file_path, rows, yesterday_latest_dispatch, yesterday):
+		# Update status in terminal 
+		print("Formating output files for yesterday ...")
+
+		format_out_files(yesterday_latest_dispatch, yesterday_temp_file_path, yesterday_file_path)
 
 	# Write final data to kaggle 
 	write_to_kaggle(is_new_dataset, kaggle_path, finals_path)

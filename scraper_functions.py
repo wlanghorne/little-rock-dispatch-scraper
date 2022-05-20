@@ -228,7 +228,7 @@ def write_to_kaggle(is_new_dataset, kaggle_path, dataset_path):
 	else: 
 		# tag update message with current time 
 		update_time = str(datetime.now())
-		update_msg = ' -m "Loaded new reports at' + update_time +'"'
+		update_msg = ' -m "Loaded new reports ' + update_time +'"'
 		# update data set 
 		update_dataset_cmd = kaggle_path + ' datasets version -p ' + dataset_path + update_msg
 		os.system(update_dataset_cmd)
